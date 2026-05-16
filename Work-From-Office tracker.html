@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Lock zooming to prevent iOS auto-zoom on inputs, ensuring a native app feel -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  
+  <!-- Apple/Android PWA Tags: Enables 'Add to Home Screen' standalone capability -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#eef3f8" />
+  
+  <title>Work From Office Planner</title>
+  <!-- Professional Fonts Fallback mapping modern clean aesthetics -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Premium Light Theme Palette */
+      --bg: #eef3f8;
+      --surface: rgba(255, 255, 255, 0.92);
+      --surface-solid: #ffffff;
+      --surface-soft: #f8fafc;
+      --border: #d7e1ef;
+      --border-soft: #e2e8f0;
+      --text: #0f172a;
+      --muted: #5f6f86;
+      --muted-soft: #94a3b8;
+      
+      /* Accent Colors */
+      --blue: #2563eb;
+      --blue-soft: #dbeafe;
+      
+      /* Professional Green (Office) */
+      --green: #059669;
+      --green-soft: #d1fae5;
+      --green-border: #a7f3d0;
+      --green-text: #065f46;
+      
+      /* Professional Orange (Home) */
+      --orange: #ea580c;
+      --orange-soft: #fef3c7;
+      --orange-border: #fde68a;
+      --orange-text: #9a3412;
+      
+      /* System Status Colors */
+      --violet: #7c3aed;
+      --violet-soft: #ede9fe;
+      --violet-border: #ddd6fe;
+      --violet-text: #5b21b6;
+      
+      --grey: #475569;
+      --grey-soft: #e2e8f0;
+      --grey-border: #cbd5e1;
+      --grey-text: #334155;
+      
+      --rose: #e11d48;
+      --rose-soft: #ffe4e6;
+      
+      /* Layout & Shadows */
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 18px 48px rgba(15, 23, 42, 0.08);
+      
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 20px;
+    }
+
+    [data-theme="dark"] {
+      /* Premium Dark Theme Palette */
+      --bg: #090d16;
+      --surface: rgba(17, 24, 39, 0.92);
+      --surface-solid: #111827;
+      --surface-soft: #1f2937;
+      --border: #374151;
+      --border-soft: #1f2937;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --muted-soft: #64748b;
+      
+      /* Accent Colors */
+      --blue: #3b82f6;
+      --blue-soft: rgba(59, 130, 246, 0.12);
+      
+      /* Professional Green (Office) */
+      --green: #10b981;
+      --green-soft: rgba(16, 185, 129, 0.12);
+      --green-border: rgba(16, 185, 129, 0.25);
+      --green-text: #34d399;
+      
+      /* Professional Orange (Home) */
+      --orange: #f59e0b;
+      --orange-soft: rgba(245, 158, 11, 0.12);
+      --orange-border: rgba(245, 158, 11, 0.25);
+      --orange-text: #fbbf24;
+      
+      /* System Status Colors */
+      --violet: #a78bfa;
+      --violet-soft: rgba(139, 92, 246, 0.12);
+      --violet-border: rgba(139, 92, 246, 0.22);
+      --violet-text: #c4b5fd;
+      
+      --grey: #94a3b8;
+      --grey-soft: rgba(148, 163, 184, 0.12);
+      --grey-border: rgba(148, 163, 184, 0.22);
+      --grey-text: #cbd5e1;
+      
+      --rose: #f43f5e;
+      --rose-soft: rgba(244, 63, 94, 0.12);
+      
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.6);
+    }
+
+    * { box-sizing: border-box; transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+    
+    html, body {
+      margin: 0; padding: 0;
+      min-height: 100vh;
+      font-family: 'Inter', Aptos, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 30%),
+                  radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.05), transparent 30%),
+                  var(--bg);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    body {
+      padding: 12px;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    h1, h2, h3 { font-family: 'Outfit', inherit; margin: 0; font-weight: 800; letter-spacing: -0.02em; }
+
+    /* Main Enclosing Architecture wrapper optimized for single view */
+    .app {
+      max-width: 1820px;
+      width: 100%;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      overflow: hidden; /* Prevent child overflow from stretching the app container */
+    }
+
+    /* Top Identity Bar Module */
+    .identity-strip {
+      background: linear-gradient(135deg, var(--surface-solid), var(--blue-soft));
+      border-bottom: 1px solid var(--border);
+      padding: 6px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      min-height: 48px;
+    }
+
+    .identity-left, .identity-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .brand-group { display: flex; align-items: center; gap: 8px; border-right: 1px solid var(--border); padding-right: 10px; margin-right: 2px; }
+    .brand-title { font-family: 'Outfit', inherit; font-size: 15px; font-weight: 800; color: var(--blue); white-space: nowrap; }
+
+    .identity-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; color: var(--muted); }
+    .identity-name { font-size: 16px; font-weight: 800; font-family: 'Outfit', inherit; color: var(--blue); }
+    
+    .name-input-wrapper { display: flex; align-items: center; gap: 8px; }
+    .name-input {
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      outline: none;
+    }
+    .name-input:focus { border-color: var(--blue); }
+
+    /* Header component - Reverting to Original Grid for Precision Alignment */
+    .header {
+      display: grid;
+      grid-template-columns: 0.85fr 1fr;
+      gap: 10px;
+      align-items: stretch;
+      margin-bottom: 12px;
+    }
+    .hero {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .headline { margin: 0; font-size: 27px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; }
+    .subhead { margin-top: 8px; font-size: 13px; color: #51657f; line-height: 1.55; max-width: 860px; }
+
+    .topstrip {
+      padding: 10px 12px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr 0.45fr 2fr 0.8fr;
+      gap: 12px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .box {
+      background: var(--surface-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 10px 12px;
+      height: 74px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 800; }
+    .value { margin-top: 4px; font-size: 14px; font-weight: 700; line-height: 1.3; color: var(--text); }
+
+    .panel {
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .headline { font-size: 26px; line-height: 1.15; }
+    .subhead { margin-top: 6px; font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 950px; }
+
+    .topstrip {
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      align-items: center;
+    }
+
+    .box {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      min-height: 62px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 800; }
+    .value { font-size: 15px; font-weight: 700; font-family: 'Outfit', inherit; margin-top: 4px; }
+
+    /* Standard inputs */
+    select, input[type="text"], input[type="date"] {
+      font-family: inherit;
+      width: 100%;
+      margin-top: 4px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--surface-solid);
+      color: var(--text);
+      outline: none;
+    }
+    select:focus, input[type="text"]:focus, input[type="date"]:focus { border-color: var(--blue); }
+
+    /* Common Button classes */
+    .btn {
+      font-family: inherit;
+      border: 1px solid var(--border);
+      background: var(--surface-solid);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); background: var(--surface-soft); }
+    .btn.primary { background: var(--blue); color: #fff; border-color: transparent; }
+    .btn.success { background: var(--green); color: #fff; border-color: transparent; }
+
+    /* Theme Toggle */
+    .theme-switch-wrapper { display: flex; align-items: center; gap: 8px; }
+    .theme-toggle {
+      width: 44px; height: 24px;
+      border-radius: 999px;
+      background: var(--border);
+      position: relative;
+      cursor: pointer;
+      border: none; padding: 0;
+    }
+    .theme-toggle::after {
+      content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px;
+      border-radius: 50%; background: var(--surface-solid);
+      transition: transform 0.2s ease;
+    }
+    [data-theme="dark"] .theme-toggle { background: var(--blue); }
+    [data-theme="dark"] .theme-toggle::after { transform: translateX(20px); }
+
+    /* Highlighted Single-View Dashboard Summary Cards */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      background: var(--surface-solid);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 72px;
+    }
+
+    /* Highlight Attention Glow */
+    .card.attention-glow {
+      border: 2px solid var(--orange);
+      box-shadow: 0 0 14px rgba(234, 88, 12, 0.15);
+    }
+    [data-theme="dark"] .card.attention-glow { box-shadow: 0 0 14px rgba(245, 158, 11, 0.2); }
+
+    .c-blue { background: var(--blue-soft); border-left: 4px solid var(--blue); }
+    .c-green { background: var(--green-soft); border-left: 4px solid var(--green); }
+    .c-amber { background: var(--orange-soft); border-left: 4px solid var(--orange); }
+    .c-rose { background: var(--rose-soft); border-left: 4px solid var(--rose); }
+    .c-grey { background: var(--grey-soft); border-left: 4px solid var(--muted-soft); }
+    .c-violet { background: var(--violet-soft); border-left: 4px solid var(--violet); }
+
+    .k { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 800; color: var(--muted); }
+    .v { margin-top: 4px; font-size: 20px; font-weight: 800; font-family: 'Outfit', inherit; line-height: 1.1; word-break: break-word; }
+    .t { margin-top: 4px; font-size: 10px; color: var(--muted); line-height: 1.3; overflow-wrap: break-word; word-break: break-word; }
+
+    /* Condensed Disclaimers */
+    .disclaimer-pill {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .vpn-disclaimer {
+      background: var(--orange-soft);
+      color: var(--orange-text);
+      border: 1px solid var(--orange-border);
+    }
+    .auto-disclaimer {
+      background: var(--green-soft);
+      color: var(--green-text);
+      border: 1px solid var(--green-border);
+    }
+
+    /* Status Badges */
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      border-radius: 999px; padding: 4px 8px; font-size: 10px; font-weight: 700;
+      white-space: nowrap; border: 1px solid transparent;
+    }
+    .chip .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+    
+    .green { background: var(--green-soft); color: var(--green-text); border-color: var(--green-border); }
+    .green .dot { background: var(--green); }
+    
+    .amber { background: var(--orange-soft); color: var(--orange-text); border-color: var(--orange-border); }
+    .amber .dot { background: var(--orange); }
+    
+    .red { background: var(--rose-soft); color: var(--rose); border-color: rgba(225,29,72,0.2); }
+    .red .dot { background: var(--rose); }
+    
+    .grey { background: var(--grey-soft); color: var(--grey-text); border-color: var(--grey-border); }
+    .grey .dot { background: var(--grey); }
+
+    .topchip { position: absolute; top: 10px; right: 10px; }
+
+    /* Main Multi-Column Architecture - Proportional & Fluid for Zoom Flexibility */
+    .main {
+      display: grid;
+      grid-template-columns: 0.8fr 1.4fr 2fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .col-stack { display: grid; gap: 12px; }
+
+    .panel-head {
+      padding: 12px 14px 8px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .panel-title { margin: 0; font-size: 16px; font-weight: 800; }
+    .panel-sub { margin-top: 3px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+    
+    .content { padding: 12px 14px; }
+
+    /* Notification Banner for auto-detected connections */
+    .auto-banner {
+      background: var(--green-soft);
+      border: 1px solid var(--green-border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--green-text);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .hidden { display: none !important; }
+    .auto-banner.hidden { display: none; }
+
+    .formula-card {
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      background: var(--surface-soft);
+      padding: 10px 12px;
+    }
+    .mini-label { font-size: 10px; letter-spacing: 0.08em; color: var(--muted); font-weight: 800; }
+    .formula-value { margin-top: 4px; font-size: 22px; font-weight: 800; font-family: 'Outfit', inherit; }
+    .formula-text { margin-top: 6px; font-size: 11px; color: var(--muted); line-height: 1.45; }
+    .formula-meta { margin-top: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; border-top: 1px solid var(--border); padding-top: 6px; }
+
+    /* Monthly lists */
+    .months { 
+      padding: 8px 10px; 
+      display: grid; 
+      gap: 6px; 
+      max-height: 390px; 
+      overflow-y: auto; 
+    }
+    .mrow {
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      background: var(--surface-solid);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: minmax(60px, 1.2fr) auto auto auto minmax(75px, 1fr);
+      gap: 6px;
+      align-items: center;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+    .mrow:hover { border-color: var(--blue); transform: translateX(2px); background: var(--surface-soft); }
+    .mrow.active { border-color: var(--blue); background: var(--blue-soft); box-shadow: var(--shadow-sm); }
+    .mname { font-size: 13px; font-weight: 800; font-family: 'Outfit', inherit; }
+    .msub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+    
+    @media (max-width: 600px) {
+      .mrow {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: auto auto;
+        gap: 8px;
+        padding: 12px;
+      }
+      .mrow > div:first-child { grid-column: span 2; }
+      .mrow .chip { grid-column: 3; grid-row: 1; justify-self: end; width: auto; min-width: 80px; }
+      .mrow .pill { grid-row: 2; font-size: 9px; padding: 4px 2px; }
+    }
+    
+    .pill {
+      border-radius: 6px; background: var(--border-soft); color: var(--text);
+      padding: 3px 6px; font-size: 10px; font-weight: 700; white-space: nowrap;
+    }
+
+    /* Retained Original Disclaimer container */
+    .disclaimer {
+      padding: 10px 12px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.55;
+      border-top: 1px solid var(--border-soft);
+      background: var(--surface-soft);
+    }
+
+    /* Custom form styling inside column */
+    .custom-inputs { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .radio-flex { display: flex; gap: 10px; margin: 4px 0; font-size: 11px; font-weight: 600; color: var(--muted); }
+    .radio-flex label { cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+    
+    .custom-list { margin-top: 8px; display: grid; gap: 6px; max-height: 140px; overflow-y: auto; }
+    .custom-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 10px; background: var(--surface-solid);
+      border: 1px solid var(--border-soft); border-radius: 6px; font-size: 11px;
+    }
+
+    /* Backup Status Panel UI */
+    .backup-status-card {
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      display: grid;
+      gap: 10px;
+    }
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      font-size: 11px;
+      gap: 12px;
+    }
+    .status-label { color: var(--muted); font-weight: 600; white-space: nowrap; }
+    .status-val { font-weight: 700; color: var(--text); text-align: right; }
+    .status-val.healthy { color: var(--green); }
+    .status-val.warning { color: var(--orange); }
+
+    .backup-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    /* Calendar Grid area */
+    .calendar-panel { display: grid; grid-template-rows: auto auto 1fr auto; height: 100%; }
+    .cal-top { padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--border-soft); background: var(--surface-soft); }
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; color: var(--muted); font-weight: 600; }
+    .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+    
+    .d-office { background: var(--green); }
+    .d-home { background: var(--orange); }
+    .d-holiday { background: var(--violet); }
+    .d-leave { background: var(--grey); }
+    .d-empty { background: transparent; border: 1px dashed var(--muted); }
+
+    .cal-wrap { padding: 12px 14px; }
+    .wd, .grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+    .wd { text-align: center; color: var(--muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+    
+    .day {
+      min-height: 80px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-solid);
+      padding: 8px;
+      text-align: left;
+      cursor: pointer;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative;
+    }
+    .day:hover:not(.weekend) { border-color: var(--blue); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    
+    .day.weekend { background: var(--surface-soft); color: var(--muted-soft); cursor: default; opacity: 0.75; }
+    .day.office { background: var(--green-soft); border-color: var(--green-border); color: var(--green-text); }
+    .day.home { background: var(--orange-soft); border-color: var(--orange-border); color: var(--orange-text); }
+    .day.holiday { background: var(--violet-soft); border-color: var(--violet-border); color: var(--violet-text); }
+    .day.leave { background: var(--grey-soft); border-color: var(--grey-border); color: var(--grey-text); }
+    
+    .day.today { outline: 2px solid var(--blue); outline-offset: 1px; }
+    .day.out-of-month { background: var(--surface-soft); color: var(--muted-soft); opacity: 0.35; cursor: default; border-color: var(--border-soft); }
+
+    .dhead { display: flex; justify-content: space-between; align-items: center; }
+    .dnum { font-size: 13px; font-weight: 700; font-family: 'Outfit', inherit; }
+    .todaytag { 
+      font-size: 8px; 
+      font-weight: 800; 
+      text-transform: uppercase; 
+      padding: 1px 4px; 
+      border-radius: 3px; 
+      background: var(--blue); 
+      color: #fff; 
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      z-index: 5;
+      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+    }
+    .dstatus { 
+      font-size: 11px; 
+      font-weight: 700; 
+      line-height: 1.3; 
+      margin-top: 6px; 
+      word-break: break-word; 
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .dhint { font-size: 8px; color: var(--muted-soft); margin-top: 3px; }
+
+    .foot { padding: 10px 14px; color: var(--muted); font-size: 11px; line-height: 1.5; border-top: 1px solid var(--border-soft); background: var(--surface-soft); }
+
+    /* Modals */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.5); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 1000; }
+    .modal-backdrop.show { display: flex; }
+    .modal { width: min(100%, 420px); background: var(--surface-solid); border-radius: var(--radius-md); border: 1px solid var(--border); padding: 20px; box-shadow: var(--shadow-lg); }
+    .modal-title { font-size: 20px; }
+    .modal-text { margin-top: 6px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .modal-actions { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .full-width { width: 100%; margin-top: 8px; }
+
+    /* Responsive fallbacks */
+    @media (max-width: 1200px) {
+      .header { grid-template-columns: 1fr; }
+      /* Maintain proportionality even when scaling down */
+      .main { grid-template-columns: 1fr 1.1fr 1.8fr; }
+    }
+    @media (max-width: 1300px) {
+      .summary { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .main { grid-template-columns: 1fr 1fr; }
+      .calendar-panel { grid-column: span 2; }
+    }
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; }
+      .calendar-panel { grid-column: span 1; }
+    }
+    @media (max-width: 768px) {
+      body { padding: 8px; }
+      .app { padding: 10px; border-radius: var(--radius-md); }
+      .identity-strip { flex-direction: column; align-items: flex-start; gap: 10px; padding: 12px; }
+      .theme-switch-wrapper { align-self: flex-end; width: 100%; justify-content: space-between; }
+      
+      .topstrip { grid-template-columns: 1fr 1fr; }
+      .summary { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      
+      .cal-wrap { padding: 8px; }
+      .wd { font-size: 9px; gap: 2px; }
+      .wd div { padding: 4px 0; }
+      .grid { gap: 4px; }
+      
+      .day { min-height: 64px; padding: 4px; justify-content: flex-start; gap: 2px; }
+      .dnum { font-size: 11px; }
+      .todaytag { font-size: 7px; padding: 1px 3px; top: auto; bottom: 4px; }
+      .dstatus { 
+        font-size: 8px; 
+        margin-top: 1px; 
+        line-height: 1.1; 
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .dhint { display: none; }
+      
+    /* Responsive Design Refinement */
+    @media (max-width: 1400px) {
+      .summary { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 1024px) {
+      .identity-strip { justify-content: center; }
+      .identity-left, .identity-right { width: 100%; justify-content: center; gap: 15px; }
+      .summary { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .main { grid-template-columns: 1fr; }
+      .identity-left, .identity-right { flex-direction: column; text-align: center; }
+      .name-input-wrapper { flex-direction: column; gap: 4px; }
+      .modal { padding: 16px; width: 90%; }
+    }
+    @media (max-width: 480px) {
+      .summary { 
+        display: flex !important; 
+        flex-direction: column !important; 
+        gap: 12px !important; 
+        width: 100% !important; 
+        padding: 0 !important;
+      }
+      .identity-name { font-size: 14px; }
+      .card { 
+        min-height: 60px !important; 
+        padding: 12px !important; 
+        border-radius: 14px !important;
+        margin: 0 0 12px 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+      .card .v { font-size: 17px !important; }
+      .card .t { font-size: 9px !important; margin-top: 4px !important; line-height: 1.4 !important; }
+      .app { 
+        padding: 10px !important; 
+        border-radius: 0 !important; 
+        border-left: none !important; 
+        border-right: none !important; 
+        width: 100% !important; 
+        max-width: 100vw !important; 
+        margin: 0 !important;
+      }
+      body { padding: 0 !important; }
+      .months { padding: 4px; max-height: 450px; }
+    }
+    
+    /* Prevent native OS styling overrides on mobile inputs */
+    input[type="text"], input[type="date"], select {
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 38px;
+    }
+    
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='3'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 14px;
+      padding-right: 28px !important;
+    }
+
+    .watermark {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-15deg);
+      font-size: clamp(40px, 10vw, 180px);
+      font-weight: 900;
+      color: var(--blue);
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 99999;
+      white-space: nowrap;
+      text-transform: uppercase;
+      font-family: 'Outfit', sans-serif;
+      user-select: none;
+    }
+
+    /* body.is-weekend #banner-autodetect { display: none !important; } */
+  </style>
+</head>
+<body>
+  <div class="app" style="position: relative;">
+
+    
+    <!-- Top Notice Bar -->
+    <div style="background: var(--blue-soft); border-bottom: 1px solid var(--border-soft); padding: 8px 16px; border-radius: var(--radius-md) var(--radius-md) 0 0; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+      <div style="font-weight: 900; color: var(--blue); font-size: 15px; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 16px;">🏢</span> WORK FROM OFFICE PLANNER
+      </div>
+      <div style="font-size: 11px; color: var(--muted); line-height: 1.4; flex: 1; min-width: 300px;">
+        Use this planner to track WFO progress, pending office days, & the pace needed to stay aligned. 
+        <strong>For planning purposes only</strong> — refer to the official portal for actual usage.
+      </div>
+    </div>
+    
+    <!-- Permanent Name Identity Banner -->
+    <section class="identity-strip">
+      <div class="identity-left" style="gap: 12px;">
+        <span class="identity-label" style="font-size: 11px; letter-spacing: 0.08em;">👤 Executive name:</span>
+        <div id="display-name-wrap" class="name-input-wrapper">
+          <span class="identity-name" id="label-username" style="font-size: 15px;">Loading...</span>
+          <button class="btn" id="btn-edit-name" style="padding: 1px 6px; font-size: 9px;">Edit</button>
+        </div>
+        <div id="edit-name-wrap" class="name-input-wrapper" style="display: none;">
+          <input type="text" id="input-username" class="name-input" placeholder="Name..." style="width: 160px; height: 30px; font-size: 12px;" />
+          <button class="btn primary" id="btn-save-name" style="padding: 3px 8px; font-size: 10px;">Save</button>
+        </div>
+        
+        <div style="display: flex; gap: 8px; align-items: center;">
+           <div class="disclaimer-pill vpn-disclaimer" style="padding: 4px 10px; font-size: 10px;" title="Automated checks cannot distinguish VPN from physical network. Please correct manually if on VPN from home.">
+             <span>⚠️ VPN? Correct if at home</span>
+           </div>
+           <div id="banner-autodetect" class="disclaimer-pill auto-disclaimer hidden" style="padding: 4px 10px; font-size: 10px;">
+             <span>✅ Auto-marked at Office</span>
+           </div>
+        </div>
+      </div>
+
+      <div class="identity-right">
+        <div style="display: flex; gap: 6px; align-items: center; font-size: 10px; font-weight: 700; color: var(--muted); background: var(--surface-solid); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--border-soft); white-space: nowrap;">
+          <span id="today-pill">--</span>
+          <span style="color: var(--border-soft);">|</span>
+          <span id="selected-pill">--</span>
+          <span id="year-pill">--</span>
+        </div>
+        
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <select id="region-select" style="width: 130px; min-height: 28px; margin-top: 0; padding: 2px 6px; font-size: 10px; border-radius: 6px;"></select>
+          <button class="btn" id="btn-reset" style="padding: 2px 8px; min-height: 28px; font-size: 10px; font-weight: 800; border-color: rgba(225,29,72,0.2); color: var(--rose);">Reset (3)</button>
+        </div>
+
+        <div class="theme-switch-wrapper" style="gap: 6px;">
+          <span style="font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase;" id="theme-text">Light</span>
+          <button class="theme-toggle" id="btn-theme-toggle" title="Switch Theme" style="width: 36px; height: 20px;"></button>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Highlighted Attention Core Summary Bar -->
+    <section class="summary" id="summary-bar"></section>
+
+    <!-- Main Architecture Layout (3 Column Grid Command Center) -->
+    <section class="main">
+      
+      <!-- Column 1: Config Tools Stack -->
+      <div class="col-stack">
+        
+        <!-- Auto Check-in settings -->
+        <div class="panel" style="display: none;">
+          <div class="panel-head">
+            <h2 class="panel-title">Zero-Intervention Checks</h2>
+            <div class="panel-sub">Auto detect target SSID presence to mark location automatically.</div>
+          </div>
+          <div class="content">
+            <div class="radio-flex" style="margin-bottom: 8px; justify-content: flex-start;">
+              <label><input type="radio" name="det-mode" value="sim" checked /> Sim Mode</label>
+              <label><input type="radio" name="det-mode" value="live" /> Live Intranet Beacon</label>
+            </div>
+            
+            <!-- Simulation settings block -->
+            <div class="formula-card" id="card-sim">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="mini-label">SSID gateway verification</span>
+                <span class="chip grey" id="ssid-status-chip"><span class="dot"></span>Checking</span>
+              </div>
+              <div style="display: flex; gap: 8px; margin-top: 6px;">
+                <input type="text" id="input-ssid" value="NCOMPASS" placeholder="SSID Name" style="flex: 1;" title="SSID Network Name" />
+                <input type="text" id="input-ssid-probe" value="https://uswvnaslb.ad.tatacommunications.com/" placeholder="https://uswvnaslb.ad.tatacommunications.com/" style="flex: 1.2;" title="SSID Gateway Probe URL" />
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 11px; color: var(--muted);">
+                <span>Manual Bypass Override</span>
+                <input type="checkbox" id="check-simulate" style="accent-color: var(--green); cursor: pointer;" title="Manually bypass live probing if gateway block applies" />
+              </div>
+              <div style="margin-top: 8px; font-size: 10px; color: var(--muted); line-height: 1.35;">
+                Client scripts cannot query OS SSIDs directly. Sim mode checks real Wi-Fi presence by probing the SSID gateway. If unreachable, you can manually toggle the override box.
+              </div>
+            </div>
+
+            <!-- Live Intranet Beacon block -->
+            <div class="formula-card" id="card-live" style="display: none;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="mini-label">Office beacon probe URL</span>
+                <span class="chip grey" id="live-status-chip"><span class="dot"></span>Checking</span>
+              </div>
+              <input type="text" id="input-beacon" value="https://newrepc/" placeholder="https://newrepc/" style="margin-top: 6px;" />
+              <div style="margin-top: 8px; font-size: 10px; color: var(--muted); line-height: 1.35;">
+                Client scripts cannot read OS Wi-Fi SSIDs directly. Live mode checks presence by fetching an internal beacon accessible only when connected to internal corporate Wi-Fi.
+              </div>
+            </div>
+
+            <div style="margin-top: 8px; font-size: 10px; color: var(--muted-soft); line-height: 1.4;">
+              If active check confirms target connection on any active weekday, status is mapped to Office instantly without manual dialog windows.
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature Additions: Custom Leave & Holiday Creation -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2 class="panel-title">Custom leaves / holidays</h2>
+            <div class="panel-sub">Register custom non-working overrides. Calculations align dynamically.</div>
+          </div>
+          <div class="content" style="padding-top: 8px;">
+            <div class="radio-flex">
+              <label><input type="radio" name="ctype" value="holiday" checked /> Holiday</label>
+              <label><input type="radio" name="ctype" value="leave" /> Leave</label>
+            </div>
+              <div class="custom-inputs">
+                <div style="display: grid; gap: 8px;">
+                  <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span class="mini-label" style="font-size: 9px; opacity: 0.8;">Start Date</span>
+                    <input type="date" id="cdate" title="Start Date" />
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span class="mini-label" style="font-size: 9px; opacity: 0.8;">End Date (Optional)</span>
+                    <input type="date" id="cdate-end" title="End Date (Optional)" />
+                  </div>
+                </div>
+              <input type="text" id="cdesc" placeholder="Description label..." />
+              <button class="btn primary" id="btn-add-c" style="width: 100%; padding: 10px;">Add Custom Entry</button>
+            </div>
+            <div class="custom-list" id="custom-list-stack"></div>
+          </div>
+        </div>
+
+        <!-- RESTORED SHARE / BACKUP PANEL -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2 class="panel-title">Share / backup</h2>
+            <div class="panel-sub">Export your data to a spreadsheet or secure it with a full system backup.</div>
+          </div>
+          <div class="content">
+            <!-- RESTORED CSV TOOLS -->
+            <div class="formula-card">
+              <div class="mini-label">Spreadsheet tools</div>
+              <div class="formula-text" style="margin-bottom: 8px;">Export planner data to CSV with columns: executive name, region, month, date, day, and WFO status.</div>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <button class="btn" id="export-btn" style="flex: 1; min-width: 100px;">Export CSV</button>
+                <button class="btn" id="import-btn" style="flex: 1; min-width: 100px;">Import CSV</button>
+                <input type="file" id="import-file" accept=".csv,text/csv" style="display: none;" />
+              </div>
+            </div>
+
+            <!-- REFINED BACKUP SECTION -->
+            <div class="backup-status-card">
+              <div class="mini-label" style="margin-bottom: 2px;">System Backup & Recovery</div>
+              <div class="status-item">
+                <span class="status-label">Last secured:</span>
+                <span class="status-val healthy" id="db-status">Auto-saved at --:--</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">Local state:</span>
+                <span class="status-val" id="backup-time">Ready for export</span>
+              </div>
+              
+              <div class="backup-actions" style="grid-template-columns: 1fr; margin-top: 8px;">
+                <button class="btn primary" id="btn-manual-backup" style="padding: 12px; font-weight: 700;" title="Download a full backup file to your computer">Download backup file</button>
+                <button class="btn" id="btn-setup-backup" style="padding: 10px; font-size: 11px;" title="Select a folder for automatic background backups">Configure auto-folder</button>
+                <button class="btn" id="btn-restore-full" style="padding: 10px; font-size: 11px;" title="Upload a previously saved backup file to restore your data">Restore from backup</button>
+                <input type="file" id="restore-file" accept=".json,application/json" style="display: none;" />
+              </div>
+              
+              <div style="font-size: 10px; color: var(--muted); margin-top: 6px; text-align: center; line-height: 1.4; padding: 0 4px;">
+                Internal data restores <b>automatically</b> on every load. Manual restore is only needed for new devices.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Column 2: Formulas & Target Schedules Stack -->
+      <div class="col-stack">
+        
+        <!-- EXACT RETAINED ORIGINAL MONTHLY TARGETS PANEL -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2 class="panel-title">Monthly targets</h2>
+            <div class="panel-sub">Regional holiday calendar is applied automatically from the selected office region. Click any row to switch the calendar.</div>
+          </div>
+          <div class="months" id="months-list"></div>
+          <!-- EXACT RETAINED ORIGINAL DISCLAIMER FOOTER -->
+          <div class="disclaimer"><strong>Disclaimer:</strong> The number of <strong>WFO days</strong> shown in this planner is calculated using a standard approximation formula and is only for planning purpose. Please verify the final requirement from the official <strong>hybrid work portal</strong> before actual usage. Common holidays are auto-applied for all regions, and regional holidays are applied from the selected office region.</div>
+        </div>
+
+        <!-- EXACT RETAINED ORIGINAL FORMULA SUMMARY PANEL -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2 class="panel-title">WFO formula summary</h2>
+            <div class="panel-sub">Baseline WFO count is 12. Final WFO days = 12 − floor((holiday + leave) / 2).</div>
+          </div>
+          <div class="content">
+            <div class="formula-card">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                  <div class="mini-label">Calculated WFO days</div>
+                  <div class="formula-value" id="formula-value">--</div>
+                </div>
+                <button class="btn primary" id="notify-btn">Enable notifications</button>
+              </div>
+              <div class="formula-text" id="formula-text">Formula detail will appear here.</div>
+              <div class="formula-meta">
+                <div id="target-note">Holiday / Leave impact: --</div>
+                <div id="target-status"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Column 3: Main Calendar Work Area -->
+      <div class="panel calendar-panel">
+        
+        <!-- EXACT RETAINED ORIGINAL CALENDAR HEAD -->
+        <div class="panel-head">
+          <h2 class="panel-title" id="calendar-title">Calendar</h2>
+          <div class="panel-sub">Click any weekday to cycle: Office → Home → Holiday → Leave → Clear. Region holidays are auto-marked and can still be overridden if needed.</div>
+        </div>
+
+        <div class="cal-top">
+          <div class="legend">
+            <div class="legend-item"><span class="legend-dot d-office"></span> Office</div>
+            <div class="legend-item"><span class="legend-dot d-home"></span> Home</div>
+            <div class="legend-item"><span class="legend-dot d-holiday"></span> Holiday</div>
+            <div class="legend-item"><span class="legend-dot d-leave"></span> Leave</div>
+            <div class="legend-item"><span class="legend-dot d-empty"></span> Not set</div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);">Effective weekdays left exclude future dates marked as holiday or leave.</div>
+        </div>
+
+        <div class="cal-wrap">
+          <div class="wd" id="weekday-row"></div>
+          <div class="grid" id="calendar-grid"></div>
+        </div>
+
+        <!-- EXACT RETAINED ORIGINAL FOOTER TEXT -->
+        <div class="foot">
+          <div>This file can remind you while it stays open in the browser. For truly automatic closed-tab reminders, use an installable PWA/extension and the official portal for actual usage planning.</div>
+          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); text-align: center; font-size: 10px; color: var(--muted-soft); letter-spacing: 0.03em;">
+            Developed and designed by <strong id="secret-reset" style="cursor: pointer; user-select: none;" title="Double click multiple times">Vishal Mohite</strong> (for individual use only)
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- Manual Timer Check-in Modal -->
+  <div class="modal-backdrop" id="prompt-modal">
+    <div class="modal">
+      <div class="modal-title">Today's work location</div>
+      <div class="modal-text">It is the weekday check-in. Select whether work is from office or home today. The calendar can still be edited later if needed.</div>
+      <div class="modal-actions">
+        <button class="btn success" id="prompt-office" style="padding: 10px;">Working from Office</button>
+        <button class="btn" id="prompt-home" style="padding: 10px; background: var(--orange); color: #fff; border-color: transparent;">Working from Home</button>
+      </div>
+      <button class="btn full-width" id="prompt-dismiss">Remind me later today</button>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * PERSISTENT KEY & BASE DATA CONSTANTS
+     */
+    const STORAGE_KEY = 'wfo-planner-premium-state-v2';
+    const BASE_WFO_DAYS = 12;
+    const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    
+    const FISCAL_MONTHS = [
+      { label: "Apr'26", monthName: 'April', year: 2026, month: 3 },
+      { label: "May'26", monthName: 'May', year: 2026, month: 4 },
+      { label: "Jun'26", monthName: 'June', year: 2026, month: 5 },
+      { label: "Jul'26", monthName: 'July', year: 2026, month: 6 },
+      { label: "Aug'26", monthName: 'August', year: 2026, month: 7 },
+      { label: "Sep'26", monthName: 'September', year: 2026, month: 8 },
+      { label: "Oct'26", monthName: 'October', year: 2026, month: 9 },
+      { label: "Nov'26", monthName: 'November', year: 2026, month: 10 },
+      { label: "Dec'26", monthName: 'December', year: 2026, month: 11 },
+      { label: "Jan'27", monthName: 'January', year: 2027, month: 0 },
+      { label: "Feb'27", monthName: 'February', year: 2027, month: 1 },
+      { label: "Mar'27", monthName: 'March', year: 2027, month: 2 }
+    ];
+
+    const HOLIDAYS = {
+      common: [
+        ['2026-01-01', "New Year's Day"],
+        ['2026-01-26', 'Republic Day'],
+        ['2026-05-01', 'May Day (Labour Day) / Buddha Poornima'],
+        ['2026-05-27', 'Id-Ul-Zuha (Bakrid)'],
+        ['2026-09-04', 'Janmashtami'],
+        ['2026-10-02', 'Mahatma Gandhi Jayanti'],
+        ['2026-10-20', 'Dussehra'],
+        ['2026-11-09', 'Deepavali (Govardhan Puja)'],
+        ['2026-12-25', 'Christmas Day']
+      ],
+      northern: [['2026-03-04', 'Holi'], ['2026-08-28', 'Raksha Bandhan'], ['2026-11-24', 'Guru Nanak Jayanti']],
+      western: [['2026-03-03', 'Holi (Dhulivandan) / Holika Dahan / Dolyatra'], ['2026-03-19', 'Gudi Padwa'], ['2026-09-14', 'Ganesh Chathurthi']],
+      western_gujarat: [['2026-01-15', 'Vasi Uttarayan'], ['2026-03-03', 'Holi (Dhulivandan) / Holika Dahan / Dolyatra'], ['2026-09-14', 'Ganesh Chathurthi']],
+      eastern: [['2026-01-23', 'Basant Panchami'], ['2026-03-03', 'Dolyatra'], ['2026-10-19', 'Dussehra (Maha Ashtami)']],
+      tamil_puducherry: [['2026-01-15', 'Pongal'], ['2026-09-14', 'Vinayakar Chaturthi / Ganesh Chathurthi'], ['2026-10-19', 'Ayutha Pooja']],
+      karnataka: [['2026-01-15', 'Pongal'], ['2026-03-19', 'Gudi Padwa'], ['2026-09-14', 'Ganesh Chathurthi']],
+      tel_ap: [['2026-01-14', 'Makar Sankranti'], ['2026-06-02', 'Telangana Formation Day'], ['2026-09-14', 'Ganesh Chathurthi']],
+      kerala: [['2026-01-14', 'Makar Sankranti'], ['2026-04-15', 'Vishu'], ['2026-08-26', 'Thiruvonam']]
+    };
+
+    const REGION_OPTIONS = [
+      ['northern', 'Northern Region'],
+      ['western', 'Western Region'],
+      ['western_gujarat', 'Western Region (Gujarat)'],
+      ['eastern', 'Eastern Region'],
+      ['tamil_puducherry', 'Tamil Nadu / Puducherry'],
+      ['karnataka', 'Karnataka'],
+      ['tel_ap', 'Telangana / Andhra Pradesh'],
+      ['kerala', 'Kerala']
+    ];
+
+    const REGION_LABEL_TO_KEY = Object.fromEntries(REGION_OPTIONS.map(([k, v]) => [v, k]));
+
+    /**
+     * ENTERPRISE STORAGE & BACKUP ENGINE
+     * Implements IndexedDB primary storage with File System Access API Auto-Backups
+     */
+    const DB_NAME = 'WFOPlannerDB';
+    const DB_VERSION = 1;
+
+    class StorageManager {
+      constructor() {
+        this.db = null;
+        this.isReady = false;
+      }
+
+      async init() {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open(DB_NAME, DB_VERSION);
+          request.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings');
+            if (!db.objectStoreNames.contains('handles')) db.createObjectStore('handles');
+          };
+          request.onsuccess = (e) => {
+            this.db = e.target.result;
+            this.isReady = true;
+            resolve();
+          };
+          request.onerror = () => reject('IndexedDB failed');
+        });
+      }
+
+      async get(store, key) {
+        if (!this.isReady) await this.init();
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(store, 'readonly');
+          const request = tx.objectStore(store).get(key);
+          request.onsuccess = () => resolve(request.result);
+        });
+      }
+
+      async set(store, key, val) {
+        if (!this.isReady) await this.init();
+        return new Promise((resolve) => {
+          const tx = this.db.transaction(store, 'readwrite');
+          tx.objectStore(store).put(val, key);
+          tx.oncomplete = () => resolve();
+        });
+      }
+    }
+
+    const storage = new StorageManager();
+
+    class BackupSystem {
+      constructor() {
+        this.folderHandle = null;
+        this.lastBackupTime = 0;
+        this.lastAutoSaveTime = Date.now();
+        this.isHealthy = true;
+      }
+
+      async init() {
+        try {
+          this.folderHandle = await storage.get('handles', 'backup_folder');
+          if (this.folderHandle) {
+            const permission = await this.folderHandle.queryPermission({ mode: 'readwrite' });
+            if (permission !== 'granted') this.folderHandle = null;
+          }
+          this.updateUI();
+        } catch (e) { console.warn('Backup system init failed', e); }
+      }
+
+      async setupFolder() {
+        try {
+          const baseHandle = await window.showDirectoryPicker();
+          this.folderHandle = await baseHandle.getDirectoryHandle('WFO_Backups', { create: true });
+          await storage.set('handles', 'backup_folder', this.folderHandle);
+          alert('Auto-Folder Setup Complete!\n\nBackups will now save to the "WFO_Backups" folder automatically.');
+          this.runAutoBackup(true);
+        } catch (e) { 
+          if (e.name === 'SecurityError' || e.message.includes('sensitive') || e.message.includes('system')) {
+            alert('Access Blocked: Windows restricts this specific folder. Please try again and select your Desktop instead.');
+          } else if (e.name !== 'AbortError') {
+            alert('Setup skipped: ' + e.message);
+          }
+        }
+      }
+
+      async runAutoBackup(force = false) {
+        const now = Date.now();
+        if (!force && (now - this.lastBackupTime < 5000)) return;
+
+        // CRITICAL PROTECTION: Do not overwrite 'Latest' with an empty/reset state automatically
+        const hasData = Object.keys(state.records).length > 0 || state.userName;
+        if (!force && !hasData) return; 
+
+        const backupData = JSON.stringify(state, null, 2);
+        const dayStamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        const fileName = `WFO_Backup_${dayStamp}.json`;
+
+        try {
+          if (this.folderHandle) {
+            const permission = await this.folderHandle.queryPermission({ mode: 'readwrite' });
+            if (permission === 'granted') {
+              // Daily rotation file (overwrites if same day)
+              await this.writeFile(this.folderHandle, fileName, backupData);
+              // Always update the absolute latest copy
+              await this.writeFile(this.folderHandle, 'WFO_Backup_Latest.json', backupData);
+              
+              await this.cleanupOldBackups();
+              this.lastBackupTime = now;
+              this.isHealthy = true;
+            } else { this.isHealthy = false; }
+          }
+        } catch (e) {
+          console.warn('Auto-folder backup skipped', e);
+          this.isHealthy = false;
+        }
+        this.updateUI();
+      }
+
+      async writeFile(folder, name, data) {
+        const fileHandle = await folder.getFileHandle(name, { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(data);
+        await writable.close();
+      }
+
+      async cleanupOldBackups() {
+        try {
+          const files = [];
+          for await (const entry of this.folderHandle.values()) {
+            // Only collect date-stamped history files (e.g., WFO_Backup_2024-05-16.json)
+            if (entry.kind === 'file' && /^WFO_Backup_\d{4}-\d{2}-\d{2}\.json$/.test(entry.name)) {
+              files.push(entry);
+            }
+          }
+          if (files.length > 10) {
+            // Sort by name (which is chronological YYYY-MM-DD)
+            files.sort((a, b) => a.name.localeCompare(b.name));
+            while (files.length > 10) {
+              const toDelete = files.shift();
+              await this.folderHandle.removeEntry(toDelete.name);
+              console.log('Cleaned up old backup:', toDelete.name);
+            }
+          }
+        } catch (e) { console.warn('Cleanup failed', e); }
+      }
+
+      async restoreLatest() {
+        if (!this.folderHandle) {
+          alert('No auto-folder configured. Double-click this button to select a file manually.');
+          return;
+        }
+        try {
+          const fileHandle = await this.folderHandle.getFileHandle('WFO_Backup_Latest.json');
+          const file = await fileHandle.getFile();
+          const txt = await file.text();
+          const parsed = JSON.parse(txt);
+          if (!parsed.records) throw new Error();
+          if (confirm('Found the latest automatic backup. Restore it now?')) {
+            this.applyData(parsed);
+          }
+        } catch (e) {
+          alert('Could not find the latest backup in your folder. Double-click to select a file manually.');
+        }
+      }
+
+      applyData(parsed) {
+        for (const key in parsed) {
+          state[key] = parsed[key];
+        }
+        saveState();
+        alert('Restore successful! The application will now reload.');
+        location.reload();
+      }
+
+      runManualDownload() {
+        const data = JSON.stringify(state, null, 2);
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const ts = new Date().toISOString().slice(0, 16).replace(/[:]/g, '-');
+        a.href = url;
+        a.download = `WFO_Manual_Backup_${ts}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        this.lastBackupTime = Date.now();
+        this.updateUI();
+      }
+
+      updateUI() {
+        if (!els.dbStatus) return;
+        const timeStr = new Date(this.lastAutoSaveTime || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        let statusText = `Auto-saved at ${timeStr}`;
+        if (this.folderHandle && this.isHealthy) {
+          statusText = `Folder Sync Active (${timeStr})`;
+        } else if (this.folderHandle && !this.isHealthy) {
+          statusText = `Permission Needed (${timeStr})`;
+        }
+        
+        els.dbStatus.textContent = statusText;
+        els.dbStatus.className = `status-val ${this.isHealthy ? 'healthy' : 'warning'}`;
+        
+        if (els.backupTime) {
+          els.backupTime.textContent = this.lastBackupTime ? 'History secured (10 files)' : 'Internal database only';
+        }
+      }
+    }
+
+    const backups = new BackupSystem();
+
+    function getDefaultActiveMonth() {
+      const now = new Date();
+      const idx = FISCAL_MONTHS.findIndex(item => item.year === now.getFullYear() && item.month === now.getMonth());
+      return idx >= 0 ? idx : 0;
+    }
+
+    /**
+     * STATE ENGINE (SURVIVES SYSTEM REBOOTS FLAWLESSLY)
+     */
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return createInitialState();
+        const parsed = JSON.parse(raw);
+        
+        // Auto-upgrade legacy local values to updated enterprise parameters seamlessly
+        const targetSSID = (parsed.targetSSID === undefined || parsed.targetSSID === 'HULK') ? 'NCOMPASS' : parsed.targetSSID;
+        const beaconUrl = (!parsed.beaconUrl || parsed.beaconUrl.includes('intranet.local') || parsed.beaconUrl.includes('tatacommunications.com')) ? 'https://newrepc/' : parsed.beaconUrl;
+        const ssidProbeUrl = parsed.ssidProbeUrl || 'https://ncompass/';
+        const detectionMode = (!parsed.detectionMode) ? 'sim' : parsed.detectionMode;
+        // Completely remove auto-selection of sim box as requested
+        const simulateSSID = parsed.simulateSSID || false;
+
+        return {
+          activeMonth: Number.isInteger(parsed.activeMonth) ? parsed.activeMonth : getDefaultActiveMonth(),
+          records: parsed.records || {},
+          customDates: parsed.customDates || {},
+          region: parsed.region || 'western',
+          lastPromptedDate: parsed.lastPromptedDate || null,
+          theme: parsed.theme || 'light',
+          targetSSID,
+          simulateSSID,
+          userName: parsed.userName || '',
+          detectionMode,
+          beaconUrl,
+          ssidProbeUrl
+        };
+      } catch {
+        return createInitialState();
+      }
+    }
+
+    function createInitialState() {
+      return {
+        activeMonth: getDefaultActiveMonth(),
+        records: {},
+        customDates: {},
+        region: 'western',
+        lastPromptedDate: null,
+        theme: 'light',
+        targetSSID: 'NCOMPASS',
+        simulateSSID: false,
+        userName: '',
+        detectionMode: 'sim',
+        beaconUrl: 'https://newrepc/',
+        ssidProbeUrl: 'https://ncompass/'
+      };
+    }
+
+    const state = loadState();
+    function saveState() { 
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); 
+      storage.set('settings', 'current_state', state);
+      backups.lastAutoSaveTime = Date.now();
+      backups.runAutoBackup();
+    }
+
+    /**
+     * DOM ELEMENTS MAPPING
+     */
+    const els = {
+      labelUsername: document.getElementById('label-username'),
+      btnEditName: document.getElementById('btn-edit-name'),
+      displayNameWrap: document.getElementById('display-name-wrap'),
+      editNameWrap: document.getElementById('edit-name-wrap'),
+      inputUsername: document.getElementById('input-username'),
+      btnSaveName: document.getElementById('btn-save-name'),
+      
+      btnThemeToggle: document.getElementById('btn-theme-toggle'),
+      themeText: document.getElementById('theme-text'),
+      
+      todayPill: document.getElementById('today-pill'),
+      selectedPill: document.getElementById('selected-pill'),
+      yearPill: document.getElementById('year-pill'),
+      regionSelect: document.getElementById('region-select'),
+      secretReset: document.getElementById('secret-reset'),
+      
+      bannerAutodetect: document.getElementById('banner-autodetect'),
+      summaryBar: document.getElementById('summary-bar'),
+      
+      inputSsid: document.getElementById('input-ssid'),
+      inputSsidProbe: document.getElementById('input-ssid-probe'),
+      checkSimulate: document.getElementById('check-simulate'),
+      ssidStatusChip: document.getElementById('ssid-status-chip'),
+      
+      cardSim: document.getElementById('card-sim'),
+      cardLive: document.getElementById('card-live'),
+      inputBeacon: document.getElementById('input-beacon'),
+      liveStatusChip: document.getElementById('live-status-chip'),
+      
+      cdate: document.getElementById('cdate'),
+      cdateEnd: document.getElementById('cdate-end'),
+      cdesc: document.getElementById('cdesc'),
+      btnAddC: document.getElementById('btn-add-c'),
+      customListStack: document.getElementById('custom-list-stack'),
+      
+      formulaValue: document.getElementById('formula-value'),
+      formulaText: document.getElementById('formula-text'),
+      targetNote: document.getElementById('target-note'),
+      targetStatus: document.getElementById('target-status'),
+      notifyBtn: document.getElementById('notify-btn'),
+      
+      monthsList: document.getElementById('months-list'),
+      
+      exportBtn: document.getElementById('export-btn'),
+      importBtn: document.getElementById('import-btn'),
+      importFile: document.getElementById('import-file'),
+      
+      // New Backup Elements
+      btnSetupBackup: document.getElementById('btn-setup-backup'),
+      btnRestoreFull: document.getElementById('btn-restore-full'),
+      restoreFile: document.getElementById('restore-file'),
+      btnManualBackup: document.getElementById('btn-manual-backup'),
+      backupTime: document.getElementById('backup-time'),
+      dbStatus: document.getElementById('db-status'),
+      
+      calendarTitle: document.getElementById('calendar-title'),
+      weekdayRow: document.getElementById('weekday-row'),
+      calendarGrid: document.getElementById('calendar-grid'),
+      
+      modal: document.getElementById('prompt-modal'),
+      promptOffice: document.getElementById('prompt-office'),
+      promptHome: document.getElementById('prompt-home'),
+      promptDismiss: document.getElementById('prompt-dismiss'),
+      btnReset: document.getElementById('btn-reset')
+    };
+
+    /**
+     * DATE UTILITY IMPLEMENTATIONS
+     */
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function toDateKey(date) { return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`; }
+    function parseDateKey(key) { const [y, m, d] = key.split('-').map(Number); return new Date(y, m - 1, d); }
+    function isWeekday(date) { const day = date.getDay(); return day >= 1 && day <= 5; }
+    function isSameDay(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+    
+    function activeItem() { return FISCAL_MONTHS[state.activeMonth]; }
+    function startOfMonth(item) { return new Date(item.year, item.month, 1); }
+    function endOfMonth(item) { return new Date(item.year, item.month + 1, 0); }
+    function getMonthDays(item) {
+      const last = endOfMonth(item).getDate();
+      return Array.from({ length: last }, (_, i) => new Date(item.year, item.month, i + 1));
+    }
+
+    /**
+     * CORE CALCULATION ENGINES
+     */
+    function buildAutoHolidayMap() {
+      const map = new Map(HOLIDAYS.common);
+      (HOLIDAYS[state.region] || []).forEach(([date, name]) => map.set(date, name));
+      return map;
+    }
+
+    function getDisplayInfo(key) {
+      if (state.records[key]) return { status: state.records[key].status, label: state.records[key].status };
+      if (state.customDates[key]) return { status: state.customDates[key].type, label: state.customDates[key].name || state.customDates[key].type };
+      
+      const autoHolidays = buildAutoHolidayMap();
+      if (autoHolidays.has(key)) return { status: 'holiday', label: autoHolidays.get(key) };
+      return { status: null, label: null };
+    }
+
+    function getDisplayStatus(key) { return getDisplayInfo(key).status; }
+
+    function getStatusCount(index, status) {
+      const item = FISCAL_MONTHS[index];
+      return getMonthDays(item).filter(date => getDisplayStatus(toDateKey(date)) === status).length;
+    }
+
+    function getComputedWfoDays(index) {
+      const holidays = getStatusCount(index, 'holiday');
+      const leaves = getStatusCount(index, 'leave');
+      const reduction = Math.floor((holidays + leaves) / 2);
+      return Math.max(BASE_WFO_DAYS - reduction, 0);
+    }
+
+    function countEffectiveWeekdaysLeft(index, today = new Date()) {
+      const item = FISCAL_MONTHS[index];
+      const end = endOfMonth(item);
+      const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      if (end < todayMidnight) return 0;
+      
+      const start = startOfMonth(item);
+      const effectiveStart = start > todayMidnight ? start : todayMidnight;
+      let count = 0;
+      for (let d = new Date(effectiveStart); d <= end; d.setDate(d.getDate() + 1)) {
+        const current = new Date(d);
+        if (!isWeekday(current)) continue;
+        const status = getDisplayStatus(toDateKey(current));
+        if (status === 'holiday' || status === 'leave') continue;
+        if (current > todayMidnight || !status) count += 1;
+      }
+      return count;
+    }
+
+    function countTotalCalendarDaysLeft(index, today = new Date()) {
+      const item = FISCAL_MONTHS[index];
+      const end = endOfMonth(item);
+      const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      if (end < todayMidnight) return 0;
+      
+      const start = startOfMonth(item);
+      const effectiveStart = start > todayMidnight ? start : todayMidnight;
+      
+      let count = 0;
+      for (let d = new Date(effectiveStart); d <= end; d.setDate(d.getDate() + 1)) {
+        const current = new Date(d);
+        // Count today if not logged, and all future days
+        if (current > todayMidnight || !getDisplayStatus(toDateKey(current))) {
+          count++;
+        }
+      }
+      return count;
+    }
+
+    function isPastMonth(index, today = new Date()) {
+      return endOfMonth(FISCAL_MONTHS[index]) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    }
+
+    function getTraffic(required, done, effectiveLeft, index, today = new Date()) {
+      const pending = Math.max(required - done, 0);
+      if (pending <= 0) return { key: 'green', label: 'On Track' };
+      if (isPastMonth(index, today)) return { key: 'grey', label: 'Not Adhered' };
+      if (effectiveLeft <= 0 || pending > effectiveLeft) return { key: 'red', label: 'At Risk' };
+      const ratio = pending / effectiveLeft;
+      if (ratio >= 0.75) return { key: 'red', label: 'At Risk' };
+      if (ratio >= 0.45) return { key: 'amber', label: 'Watch' };
+      return { key: 'green', label: 'Comfortable' };
+    }
+
+    function trafficChipHTML(traffic, extra = '') {
+      return `<span class="chip ${traffic.key} ${extra}"><span class="dot"></span>${traffic.label}</span>`;
+    }
+
+    function cycleStatus(currentDisplayStatus) {
+      if (currentDisplayStatus === null) return 'office';
+      if (currentDisplayStatus === 'office') return 'home';
+      if (currentDisplayStatus === 'home') return 'holiday';
+      if (currentDisplayStatus === 'holiday') return 'leave';
+      if (currentDisplayStatus === 'leave') return null;
+      return null;
+    }
+
+    function updateDayStatus(dateKey, nextStatus) {
+      if (!nextStatus) delete state.records[dateKey];
+      else state.records[dateKey] = { status: nextStatus, updatedAt: new Date().toISOString() };
+      saveState();
+      render();
+    }
+
+    /**
+     * USERNAME LOGIC
+     */
+    function renderUsernameState() {
+      if (!state.userName || state.userName.trim() === '') {
+        els.labelUsername.textContent = 'Unset Identity';
+        els.btnEditName.textContent = 'Set Name';
+        els.labelUsername.style.color = 'var(--orange)';
+      } else {
+        els.labelUsername.textContent = state.userName;
+        els.btnEditName.textContent = 'Edit';
+        els.labelUsername.style.color = 'var(--blue)';
+      }
+    }
+
+    els.btnEditName.addEventListener('click', () => {
+      els.displayNameWrap.style.display = 'none';
+      els.editNameWrap.style.display = 'flex';
+      els.inputUsername.value = state.userName;
+      els.inputUsername.focus();
+    });
+
+    els.btnSaveName.addEventListener('click', () => {
+      state.userName = els.inputUsername.value.trim();
+      saveState();
+      els.editNameWrap.style.display = 'none';
+      els.displayNameWrap.style.display = 'flex';
+      renderUsernameState();
+    });
+
+    /**
+     * UI RENDERING
+     */
+    function applyTheme() {
+      document.documentElement.setAttribute('data-theme', state.theme);
+      els.themeText.textContent = state.theme === 'dark' ? 'Dark Mode' : 'Light Mode';
+    }
+
+    els.btnThemeToggle.addEventListener('click', () => {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+      saveState();
+      applyTheme();
+    });
+
+    function populateRegionSelect() {
+      els.regionSelect.innerHTML = REGION_OPTIONS.map(([val, lbl]) => `<option value="${val}">${lbl}</option>`).join('');
+      els.regionSelect.value = state.region;
+    }
+
+    function buildSummaryBar(today) {
+      const totalWfo = getComputedWfoDays(state.activeMonth);
+      const completed = getStatusCount(state.activeMonth, 'office');
+      const pending = Math.max(totalWfo - completed, 0);
+      const effectiveLeft = countEffectiveWeekdaysLeft(state.activeMonth, today);
+      const totalDaysLeft = countTotalCalendarDaysLeft(state.activeMonth, today);
+      const traffic = getTraffic(totalWfo, completed, effectiveLeft, state.activeMonth, today);
+      
+      const paceWorkValue = pending <= 0 ? 'Done' : effectiveLeft === 0 ? 'N/A' : pending > effectiveLeft ? 'At Risk' : `${Math.ceil((pending / effectiveLeft) * 100)}%`;
+      const paceTotalValue = pending <= 0 ? 'Done' : totalDaysLeft === 0 ? 'N/A' : `${Math.ceil((pending / totalDaysLeft) * 100)}%`;
+      
+      const paceDisplay = pending <= 0 ? 'Done' : `${paceWorkValue} (Work) / ${paceTotalValue} (Total)`;
+
+      const paceText = traffic.label === 'Not Adhered'
+        ? 'Past month did not meet the required WFO count.'
+        : pending <= 0
+          ? 'Target achieved for the selected month.'
+          : `Need ${pending} days. Pace is ${paceWorkValue} of remaining workdays OR ${paceTotalValue} of total calendar days.`;
+
+      // Highlight the pace card if attention is warranted
+      const needsAttention = traffic.label === 'At Risk' || traffic.label === 'Watch';
+      const paceGlowClass = needsAttention ? 'attention-glow' : '';
+
+      els.summaryBar.innerHTML = `
+        <div class="card c-blue"><div class="k">Total WFO days</div><div class="v">${totalWfo}</div><div class="t">Formula based: 12 − floor((holiday + leave) / 2)</div></div>
+        <div class="card c-green"><div class="k">WFO days completed</div><div class="v" style="color: var(--green);">${completed}</div><div class="t">Office-marked weekdays in the selected month.</div></div>
+        <div class="card c-grey"><div class="k">WFO days pending</div><div class="v">${pending}</div><div class="t">Pending against the formula-based WFO count.</div></div>
+        <div class="card c-amber"><div class="k">Effective weekdays left</div><div class="v" style="color: var(--orange);">${effectiveLeft}</div><div class="t">Future weekdays excluding future holiday and leave dates.</div></div>
+        <div class="card c-violet"><div class="k">Remaining Calendar Days</div><div class="v" style="color: var(--violet);">${totalDaysLeft}</div><div class="t">Total calendar days left in this month (including weekends).</div></div>
+        <div class="card c-rose ${paceGlowClass}">${trafficChipHTML(traffic, 'topchip')}<div class="k">Required pace</div><div class="v" style="font-size: 16px; margin-top: 10px;">${paceDisplay}</div><div class="t">${paceText}</div></div>
+      `;
+
+      const holidays = getStatusCount(state.activeMonth, 'holiday');
+      const leaves = getStatusCount(state.activeMonth, 'leave');
+      const reduction = Math.floor((holidays + leaves) / 2);
+      const regionLabel = REGION_OPTIONS.find(([v]) => v === state.region)?.[1] || state.region;
+      
+      els.formulaValue.textContent = String(totalWfo);
+      els.formulaText.textContent = `Calculated as 12 − floor((${holidays} holiday + ${leaves} leave) / 2) = 12 − ${reduction}. Region applied: ${regionLabel}.`;
+      els.targetNote.textContent = `Holiday / Leave impact: ${holidays + leaves} days`;
+      els.targetStatus.innerHTML = trafficChipHTML(traffic);
+    }
+
+    function renderCustomList() {
+      const keys = Object.keys(state.customDates).sort();
+      if (keys.length === 0) {
+        els.customListStack.innerHTML = `<div style="font-size:10px;color:var(--muted);text-align:center;padding:4px 0;">No custom overrides added.</div>`;
+        return;
+      }
+      els.customListStack.innerHTML = keys.map(k => {
+        const item = state.customDates[k];
+        return `
+          <div class="custom-row">
+            <div><strong>${k}</strong> <span style="color:var(--muted);margin-left:4px;">[${item.type}]</span> <span style="margin-left:4px;">${item.name}</span></div>
+            <button class="btn" data-del="${k}" style="padding:1px 5px;font-size:9px;color:var(--rose);">X</button>
+          </div>
+        `;
+      }).join('');
+
+      Array.from(els.customListStack.querySelectorAll('[data-del]')).forEach(btn => {
+        btn.addEventListener('click', () => {
+          delete state.customDates[btn.dataset.del];
+          saveState();
+          render();
+        });
+      });
+    }
+
+    els.btnAddC.addEventListener('click', () => {
+      const startStr = els.cdate.value;
+      if (!startStr) return;
+      const endStr = els.cdateEnd.value || startStr;
+      
+      const type = document.querySelector('input[name="ctype"]:checked').value;
+      const desc = els.cdesc.value.trim() || type;
+
+      let current = new Date(startStr);
+      const end = new Date(endStr);
+      if (end < current) { alert("End date cannot be before start date"); return; }
+      
+      // Loop from start to end (inclusive) and add each valid weekday
+      while (current <= end) {
+        if (isWeekday(current)) {
+          const dKey = toDateKey(current);
+          state.customDates[dKey] = { name: desc, type };
+          if (state.records[dKey]) delete state.records[dKey];
+        }
+        current.setDate(current.getDate() + 1);
+      }
+
+      els.cdate.value = '';
+      if (els.cdateEnd) els.cdateEnd.value = '';
+      els.cdesc.value = '';
+      saveState();
+      render();
+    });
+
+    function buildMonthList(today) {
+      els.monthsList.innerHTML = FISCAL_MONTHS.map((item, index) => {
+        const totalWfo = getComputedWfoDays(index);
+        const completed = getStatusCount(index, 'office');
+        const pending = Math.max(totalWfo - completed, 0);
+        const effectiveLeft = countEffectiveWeekdaysLeft(index, today);
+        const traffic = getTraffic(totalWfo, completed, effectiveLeft, index, today);
+        const active = index === state.activeMonth ? 'active' : '';
+        return `
+          <div class="mrow ${active}" data-month="${index}">
+            <div><div class="mname">${item.label}</div><div class="msub">${item.monthName} ${item.year}</div></div>
+            <div class="pill">WFO ${totalWfo}</div>
+            <div class="pill" style="${completed > 0 ? 'color:var(--green);font-weight:800;' : ''}">Done ${completed}</div>
+            <div class="pill">Pend ${pending}</div>
+            <div>${trafficChipHTML(traffic)}</div>
+          </div>
+        `;
+      }).join('');
+
+      Array.from(els.monthsList.querySelectorAll('.mrow')).forEach(row => {
+        row.addEventListener('click', () => {
+          state.activeMonth = Number(row.dataset.month);
+          saveState();
+          render();
+        });
+      });
+    }
+
+    function buildCalendar(today) {
+      const item = activeItem();
+      els.selectedPill.textContent = item.label;
+      els.yearPill.textContent = String(item.year);
+      els.calendarTitle.textContent = `${item.monthName} ${item.year} calendar`;
+      els.weekdayRow.innerHTML = WEEKDAYS.map(day => `<div>${day}</div>`).join('');
+
+      const monthDays = getMonthDays(item);
+      const start = startOfMonth(item);
+      const offset = start.getDay();
+      let html = '';
+      let cellCount = 0;
+
+      // Leading days from previous month
+      const prevEnd = new Date(item.year, item.month, 0);
+      const lastDateOfPrev = prevEnd.getDate();
+      for (let i = offset - 1; i >= 0; i--) {
+        const d = lastDateOfPrev - i;
+        html += `<div class="day out-of-month"><div class="dnum">${d}</div></div>`;
+        cellCount++;
+      }
+
+      monthDays.forEach(day => {
+        const key = toDateKey(day);
+        const info = getDisplayInfo(key);
+        const status = info.status;
+        const weekday = isWeekday(day);
+        const isToday = isSameDay(day, today);
+
+        const label = !weekday ? 'Weekend'
+          : status === 'office' ? 'Office'
+          : status === 'home' ? 'Home'
+          : status === 'holiday' ? (info.label || 'Holiday')
+          : status === 'leave' ? (info.label || 'Leave')
+          : 'Not set';
+
+        const classes = ['day'];
+        if (!weekday) classes.push('weekend');
+        if (status) classes.push(status);
+        if (isToday) classes.push('today');
+
+        html += `
+          <div class="${classes.join(' ')}" data-date="${key}" title="${label}">
+            ${isToday ? '<span class="todaytag">Today</span>' : ''}
+            <div class="dhead">
+              <div class="dnum">${day.getDate()}</div>
+            </div>
+            <div>
+              <div class="dstatus">
+                ${(!weekday && status === 'office') ? '<div style="font-weight:800; color:var(--green-text); font-size:11px;">Office</div>' : ''}
+                <div style="${!weekday && status === 'office' ? 'font-size:9px; opacity:0.8;' : ''}">${label}</div>
+              </div>
+              <div class="dhint">Click to change</div>
+            </div>
+          </div>
+        `;
+        cellCount++;
+      });
+
+      // Trailing days from next month to complete the 42-cell grid (6 rows)
+      let nextD = 1;
+      while (cellCount < 42) {
+        html += `<div class="day out-of-month"><div class="dnum">${nextD}</div></div>`;
+        nextD++;
+        cellCount++;
+      }
+
+      els.calendarGrid.innerHTML = html;
+
+      Array.from(els.calendarGrid.querySelectorAll('.day:not(.out-of-month)')).forEach(cell => {
+        cell.addEventListener('click', () => {
+          const key = cell.dataset.date;
+          const current = getDisplayStatus(key);
+          
+          if (!isWeekday(parseDateKey(key))) {
+            // For weekends, only toggle between Office and Clear
+            const nextStatus = current === 'office' ? null : 'office';
+            updateDayStatus(key, nextStatus);
+            return;
+          }
+          
+          updateDayStatus(key, cycleStatus(current));
+        });
+      });
+    }
+
+    function render() {
+      const today = new Date();
+      els.todayPill.textContent = today.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+      
+      /* Safety: ensure auto-mark banner stays hidden on weekends
+      if (!isWeekday(today)) {
+        document.body.classList.add('is-weekend');
+        els.bannerAutodetect.classList.add('hidden');
+      } else {
+        document.body.classList.remove('is-weekend');
+      } */
+      
+      applyTheme();
+      renderUsernameState();
+      populateRegionSelect();
+      
+      els.inputSsid.value = state.targetSSID;
+      els.checkSimulate.checked = state.simulateSSID;
+      if (els.inputBeacon) els.inputBeacon.value = state.beaconUrl;
+      
+      const radioMode = document.querySelector(`input[name="det-mode"][value="${state.detectionMode || 'sim'}"]`);
+      if (radioMode) radioMode.checked = true;
+      
+      if (state.detectionMode === 'live') {
+        if (els.cardSim) els.cardSim.style.display = 'none';
+        if (els.cardLive) els.cardLive.style.display = 'block';
+      } else {
+        if (els.cardSim) els.cardSim.style.display = 'block';
+        if (els.cardLive) els.cardLive.style.display = 'none';
+      }
+      
+      buildSummaryBar(today);
+      renderCustomList();
+      buildMonthList(today);
+      buildCalendar(today);
+
+      if (typeof Notification !== 'undefined') {
+        els.notifyBtn.textContent = Notification.permission === 'granted' ? 'Notifications enabled' : 'Enable notifications';
+      } else {
+        els.notifyBtn.textContent = 'Notifications unsupported';
+      }
+    }
+
+    /**
+     * SSID AUTO DETECT LOGIC
+     */
+    async function executeAutoDetect() {
+      const now = new Date();
+      if (!isWeekday(now)) {
+        els.bannerAutodetect.classList.add('hidden');
+        return;
+      }
+      const todayKey = toDateKey(now);
+      
+      // Let's check physical Live Intranet Beacon first to satisfy concurrent checking and auto-toggling
+      if (els.liveStatusChip) {
+        els.liveStatusChip.className = 'chip grey';
+        els.liveStatusChip.innerHTML = '<span class="dot"></span>Checking';
+      }
+      
+      let liveIntranetConnected = false;
+      try {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), 3500);
+        const probeUrl = `${state.beaconUrl || 'https://newrepc/'}?_t=${Date.now()}`;
+        await fetch(probeUrl, { mode: 'no-cors', signal: controller.signal });
+        clearTimeout(id);
+        liveIntranetConnected = true;
+      } catch (e) {
+        liveIntranetConnected = false;
+      }
+
+      if (liveIntranetConnected) {
+        if (state.detectionMode !== 'live') {
+          state.detectionMode = 'live';
+          saveState();
+        }
+        if (els.liveStatusChip) {
+          els.liveStatusChip.className = 'chip green';
+          els.liveStatusChip.innerHTML = '<span class="dot"></span>Connected';
+        }
+        if (getDisplayStatus(todayKey) !== 'office') {
+          state.records[todayKey] = { status: 'office', updatedAt: new Date().toISOString(), autoMarked: true };
+          saveState(); render();
+        }
+        
+        // Show banner only if system marked it automatically for today
+        const rec = state.records[todayKey];
+        if (rec && rec.status === 'office' && rec.autoMarked) {
+          els.bannerAutodetect.classList.remove('hidden');
+          els.bannerAutodetect.innerHTML = '<span>✅ Auto-marked at Office</span>';
+        } else {
+          els.bannerAutodetect.classList.add('hidden');
+        }
+        return;
+      }
+
+      if (els.liveStatusChip) {
+        els.liveStatusChip.className = 'chip red';
+        els.liveStatusChip.innerHTML = '<span class="dot"></span>Disconnected';
+      }
+
+      // Try for SSID Compass the exact same way as local intranet using physical network verification
+      if (els.ssidStatusChip) {
+        els.ssidStatusChip.className = 'chip grey';
+        els.ssidStatusChip.innerHTML = '<span class="dot"></span>Checking';
+      }
+      
+      let ssidProbeConnected = false;
+      
+      try {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), 3500);
+        const probeUrl = `${state.ssidProbeUrl || 'https://uswvnaslb.ad.tatacommunications.com/'}?_t=${Date.now()}`;
+        await fetch(probeUrl, { mode: 'no-cors', signal: controller.signal });
+        clearTimeout(id);
+        ssidProbeConnected = true;
+      } catch (e) {
+        ssidProbeConnected = false;
+      }
+
+      if (ssidProbeConnected) {
+        if (state.detectionMode !== 'sim') {
+          state.detectionMode = 'sim';
+          saveState();
+        }
+        if (els.ssidStatusChip) {
+          els.ssidStatusChip.className = 'chip green';
+          els.ssidStatusChip.innerHTML = '<span class="dot"></span>Connected';
+        }
+        if (getDisplayStatus(todayKey) !== 'office') {
+          state.records[todayKey] = { status: 'office', updatedAt: new Date().toISOString(), autoMarked: true };
+          saveState(); render();
+        }
+
+        // Show banner only if system marked it automatically for today
+        const rec = state.records[todayKey];
+        if (rec && rec.status === 'office' && rec.autoMarked) {
+          els.bannerAutodetect.classList.remove('hidden');
+          els.bannerAutodetect.innerHTML = '<span>✅ Auto-marked at Office</span>';
+        } else {
+          els.bannerAutodetect.classList.add('hidden');
+        }
+        return;
+      }
+
+      // If physical network probes fail, trigger manual fallback
+      if (els.ssidStatusChip) {
+        els.ssidStatusChip.className = 'chip red';
+        els.ssidStatusChip.innerHTML = '<span class="dot"></span>Disconnected';
+      }
+      els.bannerAutodetect.classList.add('hidden');
+      checkStandardPrompt(now, todayKey);
+    }
+
+    let silenceUntil = 0;
+    function checkStandardPrompt(now, todayKey) {
+      if (!isWeekday(now)) return; // Never prompt on weekends
+      if (Date.now() < silenceUntil) return;
+
+      const alreadyLogged = ['office', 'home'].includes(getDisplayStatus(todayKey));
+      if (alreadyLogged) {
+        els.modal.classList.remove('show');
+        return;
+      }
+
+      els.modal.classList.add('show');
+
+      // Send browser notification only once per day to avoid spamming the OS
+      const alreadyPromptedToday = state.lastPromptedDate === todayKey;
+      if (!alreadyPromptedToday && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        state.lastPromptedDate = todayKey;
+        saveState();
+        try { new Notification('WFO Planner check-in', { body: 'Please update whether work is from office or home today.' }); } catch (e) {}
+      }
+    }
+
+    /**
+     * LISTENERS
+     */
+    els.regionSelect.addEventListener('change', () => { state.region = els.regionSelect.value; saveState(); render(); });
+    els.inputSsid.addEventListener('input', () => { state.targetSSID = els.inputSsid.value.trim(); saveState(); executeAutoDetect(); });
+    if (els.inputSsidProbe) {
+      els.inputSsidProbe.addEventListener('input', () => { state.ssidProbeUrl = els.inputSsidProbe.value.trim(); saveState(); executeAutoDetect(); });
+    }
+    els.checkSimulate.addEventListener('change', () => { state.simulateSSID = els.checkSimulate.checked; saveState(); executeAutoDetect(); });
+    
+    if (els.inputBeacon) {
+      els.inputBeacon.addEventListener('input', () => { state.beaconUrl = els.inputBeacon.value.trim(); saveState(); executeAutoDetect(); });
+    }
+    
+    document.querySelectorAll('input[name="det-mode"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        state.detectionMode = radio.value;
+        saveState(); render(); executeAutoDetect();
+      });
+    });
+    if (els.secretReset) {
+      let clickCount = 0;
+      let clickTimer = null;
+      els.secretReset.addEventListener('click', () => {
+        clickCount++;
+        if (clickCount >= 3) {
+          if (confirm('Reset all application data?')) {
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+          }
+          clickCount = 0;
+        }
+        clearTimeout(clickTimer);
+        clickTimer = setTimeout(() => { clickCount = 0; }, 1500);
+      });
+    }
+
+    if (els.btnReset) {
+      let resetClicks = 0;
+      els.btnReset.addEventListener('click', () => {
+        resetClicks++;
+        if (resetClicks >= 3) {
+          if (confirm('Are you absolutely sure you want to reset ALL data? This cannot be undone.\n\n(A final safety backup will be saved to your folder before resetting)')) {
+            backups.runAutoBackup(true); // Final safety backup
+            localStorage.removeItem(STORAGE_KEY);
+            storage.set('settings', 'current_state', null); // Clear primary DB
+            location.reload();
+          }
+          resetClicks = 0;
+          els.btnReset.textContent = 'Reset (3)';
+        } else {
+          els.btnReset.textContent = `Reset (${3 - resetClicks})`;
+        }
+      });
+    }
+
+    els.notifyBtn.addEventListener('click', async () => {
+      if (typeof Notification === 'undefined') return;
+      try { await Notification.requestPermission(); } catch (e) {}
+      render();
+    });
+
+    els.promptOffice.addEventListener('click', () => { updateDayStatus(toDateKey(new Date()), 'office'); els.modal.classList.remove('show'); });
+    els.promptHome.addEventListener('click', () => { updateDayStatus(toDateKey(new Date()), 'home'); els.modal.classList.remove('show'); });
+    els.promptDismiss.addEventListener('click', () => { 
+      els.modal.classList.remove('show'); 
+      silenceUntil = Date.now() + 60 * 1000; // Snooze for 60 seconds
+    });
+
+    /**
+     * CSV LOGIC
+     */
+    function escapeCsv(v) { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+    
+    els.exportBtn.addEventListener('click', () => {
+      const rLbl = REGION_OPTIONS.find(([k]) => k === state.region)?.[1] || state.region;
+      const rows = [['executive name', 'region', 'month', 'date', 'day', 'wfo status']];
+      FISCAL_MONTHS.forEach(item => {
+        getMonthDays(item).forEach(d => {
+          if (!isWeekday(d)) return;
+          const k = toDateKey(d);
+          rows.push([state.userName || 'Unknown', rLbl, item.label, k, d.toLocaleDateString(undefined, { weekday: 'long' }), getDisplayStatus(k) || 'not set']);
+        });
+      });
+      const csv = rows.map(r => r.map(escapeCsv).join(',')).join('\r\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const u = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = u; a.download = `wfo-planner-${state.region}.csv`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u);
+    });
+
+    els.importBtn.addEventListener('click', () => els.importFile.click());
+    els.importFile.addEventListener('change', async (e) => {
+      const f = e.target.files?.[0]; if (!f) return;
+      try {
+        const txt = await f.text();
+        const lines = txt.split(/\r?\n/).filter(l => l.trim().length > 0);
+        const allowed = new Set(['office', 'home', 'leave', 'holiday']);
+        let cnt = 0;
+        for (let i = 1; i < lines.length; i++) {
+          const c = lines[i].split(',').map(s => s.replace(/^"|"$/g, '').trim());
+          if (c.length < 6) continue;
+          const name = c[0]; const dt = c[3]; const st = c[5].toLowerCase();
+          if (dt && allowed.has(st)) { 
+            state.records[dt] = { status: st, updatedAt: new Date().toISOString() }; 
+            if (name && name !== 'Unknown' && !state.userName) state.userName = name;
+            cnt++; 
+          }
+        }
+        saveState(); render(); alert(`Import completed. Loaded ${cnt} row(s).`);
+      } catch { alert('Unable to import CSV.'); } finally { e.target.value = ''; }
+    });
+
+    // New Backup & Restore Listeners
+    els.btnSetupBackup.addEventListener('click', () => backups.setupFolder());
+    els.btnManualBackup.addEventListener('click', () => backups.runManualDownload());
+    
+    let restoreClickTimer = null;
+    els.btnRestoreFull.addEventListener('click', () => {
+      if (restoreClickTimer) return;
+      restoreClickTimer = setTimeout(() => {
+        backups.restoreLatest();
+        restoreClickTimer = null;
+      }, 300);
+    });
+
+    els.btnRestoreFull.addEventListener('dblclick', () => {
+      if (restoreClickTimer) { clearTimeout(restoreClickTimer); restoreClickTimer = null; }
+      els.restoreFile.click();
+    });
+
+    els.restoreFile.addEventListener('change', async (e) => {
+      const f = e.target.files?.[0]; if (!f) return;
+      try {
+        const txt = await f.text();
+        const parsed = JSON.parse(txt);
+        if (!parsed.records || typeof parsed.records !== 'object') throw new Error();
+        
+        if (confirm('Restore full application state from this file?')) {
+          backups.applyData(parsed);
+        }
+      } catch { alert('Invalid backup file. Restoration failed.'); } finally { e.target.value = ''; }
+    });
+
+    // Auto trigger capture identity prompt if completely fresh load
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        await storage.init();
+        await backups.init();
+      } catch (e) {
+        console.warn('Advanced storage restricted, falling back to legacy mode.');
+      }
+      
+      render();
+      executeAutoDetect();
+      
+      try {
+        // Auto-migrate if needed
+        const dbState = await storage.get('settings', 'current_state');
+        if (!dbState && localStorage.getItem(STORAGE_KEY)) {
+          storage.set('settings', 'current_state', state);
+        }
+      } catch (e) {}
+      
+      if (!state.userName) {
+        setTimeout(() => els.btnEditName.click(), 400);
+      }
+      
+      // Run initial backup after load
+      setTimeout(() => backups.runAutoBackup(), 2000);
+    });
+
+    // Periodic 12-hour backup
+    setInterval(() => backups.runAutoBackup(), 12 * 60 * 60 * 1000);
+    
+    // Save on unload
+    window.addEventListener('beforeunload', () => backups.runAutoBackup(true));
+
+    setInterval(executeAutoDetect, 10000);
+  </script>
+</body>
+</html>
